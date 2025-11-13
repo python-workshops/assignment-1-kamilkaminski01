@@ -86,9 +86,18 @@ class ConfigManager:
     # Inicjalizacja i metody zarządzania - GOTOWE (użyj ich)
     # ════════════════════════════════════════════════════════
 
+    _instance = None  # Klasa przechowuje jedyną instancję
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            # Tworzymy instancję tylko raz
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     def __init__(self):
-        """Inicjalizuje pusty słownik konfiguracji"""
-        self._config: Dict[str, Any] = {}
+        # Każde wywołanie __init__ nie resetuje stanu (chyba że jawnie)
+        if not hasattr(self, "_config"):
+            self._config: Dict[str, Any] = {}
 
     def set_config(self, key: str, value: Any) -> None:
         """

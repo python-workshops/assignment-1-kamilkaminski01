@@ -81,107 +81,128 @@ from abc import ABC, abstractmethod
 # %% TODO: Implement Product Interfaces
 
 class Weapon(ABC):
-    """Bazowy interfejs dla broni"""
-
     @abstractmethod
     def damage(self) -> int:
-        """Zwraca obrażenia broni"""
         pass
 
     @abstractmethod
     def get_name(self) -> str:
-        """Zwraca nazwę broni"""
         pass
 
 
 class Armor(ABC):
-    """Bazowy interfejs dla pancerza"""
-
     @abstractmethod
     def defense(self) -> int:
-        """Zwraca obronę pancerza"""
         pass
 
     @abstractmethod
     def get_name(self) -> str:
-        """Zwraca nazwę pancerza"""
         pass
-
 
 # %% TODO: Implement Abstract Factory
 
 class EquipmentFactory(ABC):
-    """Abstract Factory dla ekwipunku"""
-
     @abstractmethod
     def create_weapon(self) -> Weapon:
-        """Tworzy broń odpowiednią dla klasy"""
         pass
 
     @abstractmethod
     def create_armor(self) -> Armor:
-        """Tworzy pancerz odpowiedni dla klasy"""
         pass
 
 
 # %% TODO: Implement Concrete Products - Weapons
 
-class Sword:
-    pass
+class Sword(Weapon):
+    def damage(self) -> int:
+        return 85  # High damage for warrior
+
+    def get_name(self) -> str:
+        return "Sword of Valor"
 
 
-class Staff:
-    pass
+class Staff(Weapon):
+    def damage(self) -> int:
+        return 45  # Medium damage for mage
+
+    def get_name(self) -> str:
+        return "Staff of Wisdom"
 
 
-class Bow:
-    pass
+class Bow(Weapon):
+    def damage(self) -> int:
+        return 65  # Medium-high damage for archer
+
+    def get_name(self) -> str:
+        return "Longbow"
 
 
 # %% TODO: Implement Concrete Products - Armor
 
-class HeavyArmor:
-    pass
+class HeavyArmor(Armor):
+    def defense(self) -> int:
+        return 55  # High defense for warrior
+
+    def get_name(self) -> str:
+        return "Heavy Plate Armor"
 
 
-class LightRobe:
-    pass
+class LightRobe(Armor):
+    def defense(self) -> int:
+        return 20  # Low defense for mage
+
+    def get_name(self) -> str:
+        return "Light Robe"
 
 
-class LeatherArmor:
-    pass
+class LeatherArmor(Armor):
+    def defense(self) -> int:
+        return 30  # Medium defense for archer
+
+    def get_name(self) -> str:
+        return "Leather Armor"
 
 
 # %% TODO: Implement Concrete Factories
 
-class WarriorEquipmentFactory:
-    pass
+class WarriorEquipmentFactory(EquipmentFactory):
+    def create_weapon(self) -> Weapon:
+        return Sword()
+
+    def create_armor(self) -> Armor:
+        return HeavyArmor()
 
 
-class MageEquipmentFactory:
-    pass
+class MageEquipmentFactory(EquipmentFactory):
+    def create_weapon(self) -> Weapon:
+        return Staff()
+
+    def create_armor(self) -> Armor:
+        return LightRobe()
 
 
-class ArcherEquipmentFactory:
-    pass
+class ArcherEquipmentFactory(EquipmentFactory):
+    def create_weapon(self) -> Weapon:
+        return Bow()
+
+    def create_armor(self) -> Armor:
+        return LeatherArmor()
 
 
 # %% TODO: Implement Factory Method
 
 def get_equipment_factory(character_class: str) -> EquipmentFactory:
-    """
-    Factory Method zwracający odpowiednią fabrykę dla klasy postaci
+    """Zwraca odpowiednią fabrykę ekwipunku dla podanej klasy postaci."""
+    mapping = {
+        "warrior": WarriorEquipmentFactory,
+        "mage": MageEquipmentFactory,
+        "archer": ArcherEquipmentFactory
+    }
+    key = character_class.lower()
+    if key not in mapping:
+        raise ValueError(f"Unknown character class: {character_class}")
+    return mapping[key]()
 
-    Args:
-        character_class: "warrior", "mage", lub "archer"
-
-    Returns:
-        Instancja odpowiedniej fabryki
-
-    Raises:
-        ValueError: Gdy character_class jest nieznany
-    """
-    pass
 
 # %% Example Usage
 # Odkomentuj gdy zaimplementujesz
