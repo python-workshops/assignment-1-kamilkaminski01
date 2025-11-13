@@ -49,7 +49,7 @@ from abc import ABC, abstractmethod
 # %% STEP 1: Product Interface (Weapon) - GOTOWE
 
 class Weapon(ABC):
-    """Interfejs broni - używaj tego w swoim rozwiązaniu"""
+    """Interfejs broni"""
 
     @abstractmethod
     def get_name(self) -> str:
@@ -63,8 +63,6 @@ class Weapon(ABC):
 # %% STEP 2: Concrete Products (Sword, Staff, Bow) - GOTOWE
 
 class Sword(Weapon):
-    """Miecz - broń wojownika"""
-
     def get_name(self) -> str:
         return "Sword"
 
@@ -73,8 +71,6 @@ class Sword(Weapon):
 
 
 class Staff(Weapon):
-    """Laska - broń maga"""
-
     def get_name(self) -> str:
         return "Staff"
 
@@ -83,8 +79,6 @@ class Staff(Weapon):
 
 
 class Bow(Weapon):
-    """Łuk - broń łucznika"""
-
     def get_name(self) -> str:
         return "Bow"
 
@@ -101,8 +95,22 @@ class Bow(Weapon):
 #   - Wywołuje self.create_weapon() aby stworzyć broń
 #   - Zwraca: "{name} attacks with {weapon_name} for {damage} damage!"
 
-class Character:
-    pass
+class Character(ABC):
+    """Abstrakcyjna postać – definiuje Factory Method"""
+
+    def __init__(self, name: str):
+        self.name = name
+
+    @abstractmethod
+    def create_weapon(self) -> Weapon:
+        """Factory Method – podklasy decydują, jaką broń tworzyć"""
+        pass
+
+    def attack(self) -> str:
+        """Wykonuje atak, używając broni stworzonej przez create_weapon()"""
+        weapon = self.create_weapon()
+        return f"{self.name} attacks with {weapon.get_name()} for {weapon.get_damage()} damage!"
+
 
 
 # %% STEP 4: Concrete Creators (Warrior, Mage, Archer)
@@ -111,24 +119,30 @@ class Character:
 # Dziedziczy po Character
 # Nadpisz create_weapon() - zwraca Sword()
 
-class Warrior:
-    pass
+class Warrior(Character):
+    def create_weapon(self) -> Weapon:
+        return Sword()
+
+
+class Mage(Character):
+    def create_weapon(self) -> Weapon:
+        return Staff()
+
+
+class Archer(Character):
+    def create_weapon(self) -> Weapon:
+        return Bow()
 
 
 # TODO: Zaimplementuj klasę Mage
 # Dziedziczy po Character
 # Nadpisz create_weapon() - zwraca Staff()
 
-class Mage:
-    pass
 
 
 # TODO: Zaimplementuj klasę Archer
 # Dziedziczy po Character
 # Nadpisz create_weapon() - zwraca Bow()
-
-class Archer:
-    pass
 
 
 # %% Run

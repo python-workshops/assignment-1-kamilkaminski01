@@ -27,24 +27,46 @@ from abc import ABC, abstractmethod
 # TODO: Zdefiniuj interfejs Database (ABC)
 # Metody: connect() i save(user_id, name)
 
-class Database:
-    pass
+class Database(ABC):
+    """Abstrakcyjny interfejs bazy danych."""
+
+    @abstractmethod
+    def connect(self) -> str:
+        pass
+
+    @abstractmethod
+    def save(self, user_id: str, name: str) -> str:
+        pass
 
 
 # TODO: Zaimplementuj MySQLDatabase
 # Dziedziczy po Database
 # Formaty: "Connected to MySQL", "Saved {user_id}: {name} to MySQL"
 
-class MySQLDatabase:
-    pass
+class MySQLDatabase(Database):
+    """Implementacja bazy MySQL."""
+
+    def connect(self) -> str:
+        return "Connected to MySQL"
+
+    def save(self, user_id: str, name: str) -> str:
+        return f"Saved {user_id}: {name} to MySQL"
 
 
 # TODO: Zaimplementuj PostgreSQLDatabase
 # Dziedziczy po Database
 # Formaty: "Connected to PostgreSQL", "Saved {user_id}: {name} to PostgreSQL"
 
-class PostgreSQLDatabase:
-    pass
+
+
+class PostgreSQLDatabase(Database):
+    """Implementacja bazy PostgreSQL."""
+
+    def connect(self) -> str:
+        return "Connected to PostgreSQL"
+
+    def save(self, user_id: str, name: str) -> str:
+        return f"Saved {user_id}: {name} to PostgreSQL"
 
 
 # TODO: Zaimplementuj UserService
@@ -52,7 +74,15 @@ class PostgreSQLDatabase:
 # Metoda save_user(user_id, name) używa database.connect() i database.save()
 
 class UserService:
-    pass
+    """Serwis użytkowników zależny od abstrakcji Database (DIP)."""
+
+    def __init__(self, database: Database):
+        self.database = database
+
+    def save_user(self, user_id: str, name: str) -> str:
+        connect_msg = self.database.connect()
+        save_msg = self.database.save(user_id, name)
+        return f"{connect_msg}\n{save_msg}"
 
 
 # DIP: High-level (UserService) zależy od abstrakcji (Database)
